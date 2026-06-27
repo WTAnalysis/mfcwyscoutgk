@@ -233,6 +233,7 @@ st.markdown(
       .stApp { background: #f7f8fb; }
       .block-container { max-width: 1450px; padding-top: 2rem; }
       h1, h2, h3 { color: #172033 !important; }
+      p, label { color: #344054; }
       .subtitle { color: #667085; margin-top: -0.75rem; margin-bottom: 1.5rem; }
       .selection-card, .table-card { background: white; border: 1px solid #e4e7ec; border-radius: 14px; padding: 1rem 1.2rem; box-shadow: 0 2px 8px rgba(16,24,40,.05); }
       .table-card h3 { margin: .15rem 0 .9rem; }
@@ -246,7 +247,14 @@ st.markdown(
       .comparison-table .value { text-align: center; color: #344054; }
       .comparison-table .value.best { font-weight: 800; color: #101828; background: #ecfdf3; }
       .key { color: #667085; font-size: .88rem; margin: .5rem 0 1rem; }
+      [data-testid="stWidgetLabel"] p { color: #344054 !important; font-weight: 600; }
+      [data-baseweb="select"] > div { background-color: #242631 !important; border-color: #242631 !important; }
+      [data-baseweb="select"] span, [data-baseweb="select"] svg { color: #ffffff !important; fill: #ffffff !important; }
       [data-testid="stTabs"] button { font-weight: 700; }
+      [data-testid="stTabs"] button p { color: #475467 !important; }
+      [data-testid="stTabs"] button[aria-selected="true"] p { color: #e53935 !important; }
+      [data-testid="stTabs"] button:hover p { color: #b42318 !important; }
+      [data-testid="stTabs"] [data-baseweb="tab-highlight"] { background-color: #e53935 !important; }
     </style>
     """,
     unsafe_allow_html=True,
