@@ -17,6 +17,8 @@ DATA_DIR = BASE_DIR / "data"
 LEAGUES = {
     "Scottish Premiership 2025/26": "SCO1_2526.xlsx",
     "Scottish Championship 2025/26": "SCO2_2526.xlsx",
+    "Scottish Championship 2024/25": "SCO2_2425.xlsx",
+
 }
 
 GK_METRICS = [
