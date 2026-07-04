@@ -13,6 +13,7 @@ st.set_page_config(page_title="Goalkeeper League Comparison", page_icon="🧤", 
 
 BASE_DIR = Path(__file__).resolve().parent
 DATA_DIR = BASE_DIR / "data"
+TEAM_COLUMN = "Team within selected timeframe"
 
 LEAGUES = {
     "Scottish Premiership 2025/26": "SCO1_2526.xlsx",
@@ -125,7 +126,7 @@ def load_league(filename: str) -> pd.DataFrame:
     frame = pd.read_excel(DATA_DIR / filename)
     required = {
         "Player",
-        "Team",
+        TEAM_COLUMN,
         "Passes per 90",
         "Lateral passes per 90",
         "Short / medium passes per 90",
@@ -151,14 +152,14 @@ def load_league(filename: str) -> pd.DataFrame:
 
 
 def player_label(row: pd.Series) -> str:
-    team = row.get("Team")
+    team = row.get(TEAM_COLUMN)
     return f"{row['Player']} — {team}" if pd.notna(team) and str(team).strip() else str(row["Player"])
 
 
 def player_chart_label(row: pd.Series) -> str:
     """Return Player - Team - Age while gracefully handling missing values."""
     parts = [str(row["Player"])]
-    team = row.get("Team")
+    team = row.get(TEAM_COLUMN)
     if pd.notna(team) and str(team).strip():
         parts.append(str(team).strip())
     age = row.get("Age")
@@ -241,7 +242,7 @@ def percentile_values(frame: pd.DataFrame, row: pd.Series, metrics: list[str]) -
 def league_percentile_table(frame: pd.DataFrame) -> pd.DataFrame:
     """Build the pizza-chart percentile ranks for every player in a league."""
     result = pd.DataFrame(index=frame.index)
-    for column in ("Player", "Team", "Age"):
+    for column in ("Player", TEAM_COLUMN, "Age"):
         result[column] = frame[column] if column in frame.columns else "—"
     for metric in GK_METRICS + POSSESSION_METRICS:
         series = pd.to_numeric(frame[metric], errors="coerce")
@@ -417,12 +418,12 @@ with radar_tab:
 with league_data_tab:
     st.caption(
         f"Percentile ranks for all goalkeepers in {league_b}. "
-        "Click any metric header to sort; Player, Team and Age remain pinned while scrolling."
+        f"Click any metric header to sort; Player, {TEAM_COLUMN} and Age remain pinned while scrolling."
     )
     percentile_table = league_percentile_table(frame_b)
     pinned_columns = {
         column: st.column_config.TextColumn(column, pinned=True)
-        for column in ("Player", "Team", "Age")
+        for column in ("Player", TEAM_COLUMN, "Age")
     }
     metric_columns = {
         metric: st.column_config.NumberColumn(metric, min_value=0, max_value=100, format="%d")
