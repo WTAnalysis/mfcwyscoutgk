@@ -19,8 +19,66 @@ LEAGUES = {
     "Scottish Championship 2025/26": "SCO2_2526.xlsx",
     "Scottish Championship 2024/25": "SCO2_2425.xlsx",
     "Ligue 2 2022/23": "FRA2_2223.xlsx",
-
-
+    "Premier League 2 2025/26": "PL2_2526.xlsx",
+    "English U18 Premier League 2025/26": "EU18_2526.xlsx",
+    "English National League 2025/26": "ENG5_2526.xlsx",
+    "English National League N/S 2025/26": "ENG6_2526.xlsx",
+    "English Professional Development League 2025/26": "PDL_2526.xlsx",
+    "Scottish League One 2025/26": "SCO3_2526.xlsx",
+    "Scottish League Two 2025/26": "SCO4_2526.xlsx",
+    "Austrian 2. Liga 2025/26": "AUT2_2526.xlsx",
+    "Belgian Challenger Pro League 2025/26": "BEL2_2526.xlsx",
+    "Bosnian Primera Liga 2025/26": "BOS1_2526.xlsx",
+    "Bulgarian First League 2025/26": "BUL1_2526.xlsx",
+    "Canadian Premier League 2025": "CAN1_2025.xlsx",
+    "Canadian Premier League 2026": "CAN1_2026.xlsx",
+    "Croatian Superleague 2025/26": "CRO1_2526.xlsx",
+    "Cyprus 1. Division 2025/26": "CYP1_2526.xlsx",
+    "Czech Chance Liga 2025/26": "CZE1_2526.xlsx",
+    "Czech Chance National Liga 2025/26": "CZE2_2526.xlsx",
+    "Danish 1. Division 2024/25": "DAN2_2425.xlsx",
+    "Danish 1. Division 2025/26": "DAN2_2526.xlsx",
+    "Danish 2. Division 2024/25": "DAN3_2425.xlsx",
+    "Danish 2. Division 2025/26": "DAN3_2526.xlsx",
+    "Estonian Premium Liga 2025/26": "EST1_2526.xlsx",
+    "Finnish Ykkosliiga 2025": "FIN2_2025.xlsx",
+    "Finnish Ykkosliiga 2026": "FIN2_2026.xlsx",
+    "French National 2025/26": "FRA3_2526.xlsx",
+    "Georgian Erovnuli Liga 2025": "GEO1_2025.xlsx",
+    "Georgian Erovnuli Liga 2026": "GEO1_2026.xlsx",
+    "German 3. Liga 2025/26": "GER3_2526.xlsx",
+    "German U19 Bundesliga 2025/26": "GERU19_2526.xlsx",
+    "Hungarian NB1 2025/26": "HUN1_2526.xlsx",
+    "Hungarian NB2 2025/26": "HUN2_2526.xlsx",
+    "Italian Serie C 2025/26": "ITA3_2526.xlsx",
+    "Korean K League 2025": "KOR1_2025.xlsx",
+    "Korean K League 2026": "KOR1_2026.xlsx",
+    "Latvian Virsliga 2025": "LAT1_2025.xlsx",
+    "Latvian Virsliga 2026": "LAT1_2026.xlsx",
+    "Dutch Eerste Divisie 2025/26": "NED2_2526.xlsx",
+    "Northern Irish Premiership 2025/26": "NIR1_2526.xlsx",
+    "Norwegian Obos Ligaen 2025": "NOR2_2025.xlsx",
+    "Norwegian Obos Ligaen 2026": "NOR2_2026.xlsx",
+    "Portuguese Segunda Liga 2025/26": "POR2_2526.xlsx",
+    "Romanian Superliga 2025/26": "ROM1_2526.xlsx",
+    "Serbian Super Liga 2025/26": "SER1_2526.xlsx",
+    "Slovakian Nike Liga 2025/26": "SLK1_2526.xlsx",
+    "Slovenian 1. SNL 2025/26": "SLV1_2526.xlsx",
+    "Spanish Primera Division 2025/26": "SPA3_2526.xlsx",
+    "Swedish Superettan 2025": "SWE2_2025.xlsx",
+    "Swedish Superettan 2026": "SWE2_2026.xlsx",
+    "Swedish Ettan 2025": "SWE3_2025.xlsx",
+    "Swedish Ettan 2026": "SWE3_2026.xlsx",
+    "Swedish Allsvenskan Academy 2025": "SWEA_2025.xlsx",
+    "Swedish Allsvenskan Academy 2026": "SWEA_2026.xlsx",
+    "Swiss Challenger League 2025/26": "SWI2_2526.xlsx",
+    "USA USL League 1 2025": "USA3_2025.xlsx",
+    "USA USL League 1 2026": "USA3_2026.xlsx",
+    "USA USL Championship 2025": "USA2_2025.xlsx",
+    "USA USL Championship 2026": "USA2_2026.xlsx",
+    "USA MLS Next Pro 2025": "MLSA_2025.xlsx",
+    "USA MLS Next Pro 2026": "MLSA_2026.xlsx",
+    "Welsh Premier League 2025/26": "WAL1_2526.xlsx",
 }
 
 GK_METRICS = [
@@ -97,6 +155,22 @@ def player_label(row: pd.Series) -> str:
     return f"{row['Player']} — {team}" if pd.notna(team) and str(team).strip() else str(row["Player"])
 
 
+def player_chart_label(row: pd.Series) -> str:
+    """Return Player - Team - Age while gracefully handling missing values."""
+    parts = [str(row["Player"])]
+    team = row.get("Team")
+    if pd.notna(team) and str(team).strip():
+        parts.append(str(team).strip())
+    age = row.get("Age")
+    if pd.notna(age) and str(age).strip():
+        try:
+            age = str(int(float(age)))
+        except (TypeError, ValueError):
+            age = str(age).strip()
+        parts.append(age)
+    return " - ".join(parts)
+
+
 def selected_row(frame: pd.DataFrame, label: str) -> pd.Series:
     labels = frame.apply(player_label, axis=1)
     return frame.loc[labels.eq(label)].iloc[0]
@@ -162,6 +236,22 @@ def percentile_values(frame: pd.DataFrame, row: pd.Series, metrics: list[str]) -
         rank = ranks.loc[row.name]
         values.append(0 if pd.isna(rank) else int(round(rank)))
     return values
+
+
+def league_percentile_table(frame: pd.DataFrame) -> pd.DataFrame:
+    """Build the pizza-chart percentile ranks for every player in a league."""
+    result = pd.DataFrame(index=frame.index)
+    for column in ("Player", "Team", "Age"):
+        result[column] = frame[column] if column in frame.columns else "—"
+    for metric in GK_METRICS + POSSESSION_METRICS:
+        series = pd.to_numeric(frame[metric], errors="coerce")
+        result[metric] = (
+            series.rank(method="average", pct=True, ascending=metric not in INVERTED_METRICS)
+            .mul(100)
+            .round()
+            .astype("Int64")
+        )
+    return result
 
 
 def wrap_label(label: str) -> str:
@@ -267,14 +357,14 @@ st.markdown(
 )
 
 st.title("Goalkeeper League Comparison")
-st.markdown('<p class="subtitle">Compare raw performance and league-relative percentile profiles across Scotland’s top two divisions.</p>', unsafe_allow_html=True)
+st.markdown('<p class="subtitle">Compare raw performance and league-relative percentile profiles across selected competitions.</p>', unsafe_allow_html=True)
 
 league_names = list(LEAGUES)
 selector_cols = st.columns(4)
 with selector_cols[0]:
-    league_a = st.selectbox("Player 1 league", league_names, index=0)
+    league_a = st.selectbox("Competition & Player to compare", league_names, index=0)
 with selector_cols[2]:
-    league_b = st.selectbox("Player 2 league", league_names, index=1)
+    league_b = st.selectbox("Goalkeeper Search competition & player", league_names, index=1)
 
 frame_a = load_league(LEAGUES[league_a])
 frame_b = load_league(LEAGUES[league_b])
@@ -282,15 +372,16 @@ labels_a = frame_a.apply(player_label, axis=1).tolist()
 labels_b = frame_b.apply(player_label, axis=1).tolist()
 
 with selector_cols[1]:
-    selection_a = st.selectbox("Player 1", labels_a, index=0)
+    selection_a = st.selectbox("Player to compare", labels_a, index=0)
 with selector_cols[3]:
-    selection_b = st.selectbox("Player 2", labels_b, index=0)
+    selection_b = st.selectbox("Goalkeeper Search player", labels_b, index=0)
 
 row_a = selected_row(frame_a, selection_a)
 row_b = selected_row(frame_b, selection_b)
 name_a, name_b = str(row_a["Player"]), str(row_b["Player"])
+chart_name_a, chart_name_b = player_chart_label(row_a), player_chart_label(row_b)
 
-raw_tab, radar_tab = st.tabs(["Raw Comparison", "Percentile Radars"])
+raw_tab, radar_tab, league_data_tab = st.tabs(["Raw Comparison", "Percentile Radars", "League Data"])
 
 with raw_tab:
     st.markdown('<p class="key"><span style="color:#d92d20">Red metrics</span> are inverted (lower is better). The better value in each row is bold and shaded.</p>', unsafe_allow_html=True)
@@ -313,8 +404,8 @@ with radar_tab:
                 metrics,
                 percentile_values(frame_a, row_a, metrics),
                 percentile_values(frame_b, row_b, metrics),
-                name_a,
-                name_b,
+                chart_name_a,
+                chart_name_b,
                 league_a,
                 league_b,
                 len(frame_a),
@@ -322,3 +413,25 @@ with radar_tab:
             )
             st.pyplot(fig, use_container_width=True)
             plt.close(fig)
+
+with league_data_tab:
+    st.caption(
+        f"Percentile ranks for all goalkeepers in {league_b}. "
+        "Click any metric header to sort; Player, Team and Age remain pinned while scrolling."
+    )
+    percentile_table = league_percentile_table(frame_b)
+    pinned_columns = {
+        column: st.column_config.TextColumn(column, pinned=True)
+        for column in ("Player", "Team", "Age")
+    }
+    metric_columns = {
+        metric: st.column_config.NumberColumn(metric, min_value=0, max_value=100, format="%d")
+        for metric in GK_METRICS + POSSESSION_METRICS
+    }
+    st.dataframe(
+        percentile_table,
+        hide_index=True,
+        use_container_width=True,
+        height=700,
+        column_config={**pinned_columns, **metric_columns},
+    )
