@@ -421,6 +421,34 @@ with league_data_tab:
         f"Click any metric header to sort; Player, {TEAM_COLUMN} and Age remain pinned while scrolling."
     )
     percentile_table = league_percentile_table(frame_b)
+    metric_options = GK_METRICS + POSSESSION_METRICS
+    filter_columns = st.columns(3, gap="medium")
+    active_filters: list[tuple[str, int, int]] = []
+    for filter_number, filter_column in enumerate(filter_columns, start=1):
+        with filter_column:
+            selected_metric = st.selectbox(
+                f"Filter {filter_number} metric",
+                ["No filter", *metric_options],
+                key=f"league_data_filter_metric_{filter_number}",
+            )
+            minimum, maximum = st.slider(
+                f"Filter {filter_number} percentile range",
+                min_value=0,
+                max_value=100,
+                value=(0, 100),
+                disabled=selected_metric == "No filter",
+                key=f"league_data_filter_range_{filter_number}",
+            )
+            if selected_metric != "No filter":
+                active_filters.append((selected_metric, minimum, maximum))
+
+    filtered_table = percentile_table
+    for metric, minimum, maximum in active_filters:
+        filtered_table = filtered_table[
+            filtered_table[metric].between(minimum, maximum, inclusive="both").fillna(False)
+        ]
+
+    st.caption(f"Showing {len(filtered_table)} of {len(percentile_table)} goalkeepers.")
     pinned_columns = {
         column: st.column_config.TextColumn(column, pinned=True)
         for column in ("Player", TEAM_COLUMN, "Age")
@@ -430,7 +458,7 @@ with league_data_tab:
         for metric in GK_METRICS + POSSESSION_METRICS
     }
     st.dataframe(
-        percentile_table,
+        filtered_table,
         hide_index=True,
         use_container_width=True,
         height=700,
