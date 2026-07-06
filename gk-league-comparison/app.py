@@ -42,6 +42,8 @@ LEAGUES = {
     "Danish 2. Division 2024/25": "DEN3_2425.xlsx",
     "Danish 2. Division 2025/26": "DEN3_2526.xlsx",
     "Estonian Premium Liga 2025/26": "EST1_2526.xlsx",
+    "Finnish Veikkausliiga 2025": "FIN1_2025.xlsx",
+    "Finnish Veikkausliiga 2026": "FIN1_2026.xlsx",
     "Finnish Ykkosliiga 2025": "FIN2_2025.xlsx",
     "Finnish Ykkosliiga 2026": "FIN2_2026.xlsx",
     "French National 2025/26": "FRA3_2526.xlsx",
