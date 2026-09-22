@@ -17,6 +17,8 @@ TEAM_COLUMN = "Team within selected timeframe"
 
 LEAGUES = {
     "Scottish Premiership 2025/26": "SCO1_2526.xlsx",
+    "Scottish Premiership 2026/27": "SCO1_2627.xlsx",
+    "Scottish Championship 2026/27": "SCO2_2627.xlsx",
     "Scottish Championship 2025/26": "SCO2_2526.xlsx",
     "Scottish Championship 2024/25": "SCO2_2425.xlsx",
     "Ligue 2 2022/23": "FRA2_2223.xlsx",
@@ -26,8 +28,11 @@ LEAGUES = {
     "English National League N/S 2025/26": "ENG6_2526.xlsx",
     "English Professional Development League 2025/26": "PDL_2526.xlsx",
     "Scottish League One 2025/26": "SCO3_2526.xlsx",
+    "Scottish League One 2026/27": "SCO3_2627.xlsx",
     "Scottish League Two 2025/26": "SCO4_2526.xlsx",
+    "Scottish League Two 2026/27": "SCO4_2627.xlsx",
     "Austrian 2. Liga 2025/26": "AUT2_2526.xlsx",
+    "Austrian 2. Liga 2026/27": "AUT2_2627.xlsx",
     "Belgian Challenger Pro League 2025/26": "BEL2_2526.xlsx",
     "Bosnian Primera Liga 2025/26": "BOS1_2526.xlsx",
     "Bulgarian First League 2025/26": "BUL1_2526.xlsx",
@@ -39,9 +44,11 @@ LEAGUES = {
     "Czech Chance National Liga 2025/26": "CZE2_2526.xlsx",
     "Danish 1. Division 2024/25": "DEN2_2425.xlsx",
     "Danish 1. Division 2025/26": "DEN2_2526.xlsx",
+    "Danish 1. Division 2026/27": "DEN2_2627.xlsx",    
     "Danish 2. Division 2024/25": "DEN3_2425.xlsx",
     "Danish 2. Division 2025/26": "DEN3_2526.xlsx",
     "Estonian Premium Liga 2025/26": "EST1_2526.xlsx",
+    "Faroe Islands Meisteradeildin 2026": "FAR1_2026.xlsx",
     "Finnish Veikkausliiga 2025": "FIN1_2025.xlsx",
     "Finnish Veikkausliiga 2026": "FIN1_2026.xlsx",
     "Finnish Ykkosliiga 2025": "FIN2_2025.xlsx",
@@ -53,6 +60,7 @@ LEAGUES = {
     "German U19 Bundesliga 2025/26": "GERU19_2526.xlsx",
     "Hungarian NB1 2025/26": "HUN1_2526.xlsx",
     "Hungarian NB2 2025/26": "HUN2_2526.xlsx",
+    "Iceland Besta Deild 2026": "ICE1_2026.xlsx",
     "Italian Serie C 2025/26": "ITA3_2526.xlsx",
     "Korean K League 2025": "KOR1_2025.xlsx",
     "Korean K League 2026": "KOR1_2026.xlsx",
@@ -75,6 +83,7 @@ LEAGUES = {
     "Swedish Allsvenskan Academy 2025": "SWEA_2025.xlsx",
     "Swedish Allsvenskan Academy 2026": "SWEA_2026.xlsx",
     "Swiss Challenger League 2025/26": "SWI2_2526.xlsx",
+    "Swiss Challenger League 2026/27": "SWI2_2627.xlsx",
     "USA USL League 1 2025": "USA3_2025.xlsx",
     "USA USL League 1 2026": "USA3_2026.xlsx",
     "USA USL Championship 2025": "USA2_2025.xlsx",
@@ -82,6 +91,7 @@ LEAGUES = {
     "USA MLS Next Pro 2025": "MLSA_2025.xlsx",
     "USA MLS Next Pro 2026": "MLSA_2026.xlsx",
     "Welsh Premier League 2025/26": "WAL1_2526.xlsx",
+    "Welsh Premier League 2026/27": "WAL1_2627.xlsx",
 }
 
 GK_METRICS = [
