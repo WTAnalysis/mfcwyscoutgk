@@ -401,12 +401,31 @@ st.markdown(
 st.title("Goalkeeper League Comparison")
 st.markdown('<p class="subtitle">Compare raw performance and league-relative percentile profiles across selected competitions.</p>', unsafe_allow_html=True)
 
-league_names = list(LEAGUES)
+seasons = ["2024/25", "2025", "2025/26", "2026", "2026/27"]
+selected_season = st.selectbox("Season", seasons, index=2)
+league_names = sorted(
+    (name for name in LEAGUES if name.endswith(f" {selected_season}")),
+    key=str.casefold,
+)
+if not league_names:
+    st.info("No competitions are available for the selected season.")
+    st.stop()
+
 selector_cols = st.columns(4)
 with selector_cols[0]:
-    league_a = st.selectbox("Competition & Player to compare", league_names, index=0)
+    league_a = st.selectbox(
+        "Competition & Player to compare",
+        league_names,
+        index=0,
+        key=f"competition_a_{selected_season}",
+    )
 with selector_cols[2]:
-    league_b = st.selectbox("Goalkeeper Search competition & player", league_names, index=1)
+    league_b = st.selectbox(
+        "Goalkeeper Search competition & player",
+        league_names,
+        index=min(1, len(league_names) - 1),
+        key=f"competition_b_{selected_season}",
+    )
 
 frame_a = load_league(LEAGUES[league_a])
 frame_b = load_league(LEAGUES[league_b])
