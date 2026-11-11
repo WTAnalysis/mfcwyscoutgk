@@ -402,29 +402,42 @@ st.title("Goalkeeper League Comparison")
 st.markdown('<p class="subtitle">Compare raw performance and league-relative percentile profiles across selected competitions.</p>', unsafe_allow_html=True)
 
 seasons = ["2024/25", "2025", "2025/26", "2026", "2026/27"]
-selected_season = st.selectbox("Season", seasons, index=2)
-league_names = sorted(
-    (name for name in LEAGUES if name.endswith(f" {selected_season}")),
+season_cols = st.columns(4)
+with season_cols[0]:
+    season_a = st.selectbox("Season", seasons, index=4, key="season_a")
+with season_cols[2]:
+    season_b = st.selectbox("Season", seasons, index=2, key="season_b")
+
+league_names_a = sorted(
+    (name for name in LEAGUES if name.endswith(f" {season_a}")),
     key=str.casefold,
 )
-if not league_names:
-    st.info("No competitions are available for the selected season.")
+league_names_b = sorted(
+    (name for name in LEAGUES if name.endswith(f" {season_b}")),
+    key=str.casefold,
+)
+if not league_names_a or not league_names_b:
+    st.info("No competitions are available for one of the selected seasons.")
     st.stop()
 
+default_league = "Scottish Premiership 2026/27"
+default_league_index = (
+    league_names_a.index(default_league) if default_league in league_names_a else 0
+)
 selector_cols = st.columns(4)
 with selector_cols[0]:
     league_a = st.selectbox(
         "Competition & Player to compare",
-        league_names,
-        index=0,
-        key=f"competition_a_{selected_season}",
+        league_names_a,
+        index=default_league_index,
+        key=f"competition_a_{season_a}",
     )
 with selector_cols[2]:
     league_b = st.selectbox(
         "Goalkeeper Search competition & player",
-        league_names,
-        index=min(1, len(league_names) - 1),
-        key=f"competition_b_{selected_season}",
+        league_names_b,
+        index=min(1, len(league_names_b) - 1),
+        key=f"competition_b_{season_b}",
     )
 
 frame_a = load_league(LEAGUES[league_a])
@@ -432,10 +445,30 @@ frame_b = load_league(LEAGUES[league_b])
 labels_a = frame_a.apply(player_label, axis=1).tolist()
 labels_b = frame_b.apply(player_label, axis=1).tolist()
 
+default_player_index = 0
+if league_a == default_league:
+    default_player_rows = (
+        frame_a["Player"].astype(str).str.strip().eq("A. Paulsen")
+        & frame_a[TEAM_COLUMN].astype(str).str.strip().eq("Motherwell")
+    )
+    matching_positions = np.flatnonzero(default_player_rows.to_numpy())
+    if matching_positions.size:
+        default_player_index = int(matching_positions[0])
+
 with selector_cols[1]:
-    selection_a = st.selectbox("Player to compare", labels_a, index=0)
+    selection_a = st.selectbox(
+        "Player to compare",
+        labels_a,
+        index=default_player_index,
+        key=f"player_a_{league_a}",
+    )
 with selector_cols[3]:
-    selection_b = st.selectbox("Goalkeeper Search player", labels_b, index=0)
+    selection_b = st.selectbox(
+        "Goalkeeper Search player",
+        labels_b,
+        index=0,
+        key=f"player_b_{league_b}",
+    )
 
 row_a = selected_row(frame_a, selection_a)
 row_b = selected_row(frame_b, selection_b)
