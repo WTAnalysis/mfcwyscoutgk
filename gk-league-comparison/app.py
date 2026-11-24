@@ -37,6 +37,7 @@ LEAGUES = {
     "English National League N/S 2026/27": "ENG6_2627.xlsx",
     "English Professional Development League 2026/27": "PDL1_2627.xlsx",
     "English Non League Premier 2026/27": "ENG7_2627.xlsx",
+    "Icelandic Besta Deild 2026": "ICE1_2026",
     "Scottish League One 2025/26": "SCO3_2526.xlsx",
     "Scottish League One 2026/27": "SCO3_2627.xlsx",
     "Scottish League Two 2025/26": "SCO4_2526.xlsx",
