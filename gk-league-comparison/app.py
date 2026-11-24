@@ -23,7 +23,7 @@ LEAGUES = {
     "Scottish Championship 2024/25": "SCO2_2425.xlsx",
     "Ligue 2 2022/23": "FRA2_2223.xlsx",
     "Premier League 2 2025/26": "PL2_2526.xlsx",
-    "Premier League 2 2026/27": "EPL2_2526.xlsx",
+    "Premier League 2 2026/27": "EPL2_2627.xlsx",
     "English League 1 2025/26": "ENG3_2526.xlsx",
     "English League 1 2026/27": "ENG3_2627.xlsx",
     "English League 2 2025/26": "ENG4_2526.xlsx",
